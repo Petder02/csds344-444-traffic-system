@@ -1,4 +1,7 @@
-# Starter file for the project basically
+import time
+import pygame
+import threading
+
 
 class TrafficLight():
     """
@@ -6,7 +9,7 @@ class TrafficLight():
 
     """
 
-    def __init__(self, is_green: bool, is_yellow: bool, is_red: bool, delay: float)
+    def __init__(self, is_green: bool, is_yellow: bool, is_red: bool, delay: float):
         """
         Initialize a traffic light
 
@@ -98,13 +101,80 @@ class TrafficSystem():
         self.green_time = green_time
         self.yellow_time = yellow_time
 
-    
+    def get_nort_south_time_remaining(self, time: float):
+        """
+        Get the time remaining for the north/south light
+        """
+        if self.north_south.get_green():
+            return self.green_time # / time
+        elif self.north_south.get_yellow():
+            return self.yellow_time # / time
+        else:
+            return self.red_time # / time
+
+
+    def get_east_west_time_remaining(self, time: float):
+        """
+        Get the time remaining for the east/west light
+        """
+        if self.east_west.get_green():
+            return self.green_time # % time
+        elif self.east_west.get_yellow():
+            return self.yellow_time # % time
+        else:
+            return self.red_time # % time
 
 
 
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((600, 600))
+    pygame.display.set_caption("Traffic System")
+    clock = pygame.time.Clock()
 
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
+        # Initialize the traffic lights
+        north_south = TrafficLight(False, False, True, 10.0)  # Start with North/South red
+        east_west = TrafficLight(True, False, False, 10.0)    # Start with East/West green
+        traffic_system = TrafficSystem(north_south, east_west, 10.0, 10.0, 2.0)
 
+        # Clear the screen
+        screen.fill((255, 255, 255))
 
+        # Draw roads
+        pygame.draw.rect(screen, (200, 200, 200), pygame.Rect(0, 250, 600, 100))  # Horizontal road
+        pygame.draw.rect(screen, (200, 200, 200), pygame.Rect(250, 0, 100, 600))  # Vertical road
 
+        # Update the traffic lights based on elapsed time
+        elapsed_time = pygame.time.get_ticks() / 1000  # convert milliseconds to seconds
+        if elapsed_time % (traffic_system.red_time + traffic_system.green_time + traffic_system.yellow_time) < traffic_system.red_time:
+            north_south.set_red()
+            east_west.set_green()
+        elif elapsed_time % (traffic_system.red_time + traffic_system.green_time + traffic_system.yellow_time) < traffic_system.red_time + traffic_system.green_time:
+            north_south.set_green()
+            east_west.set_red()
+        else:
+            north_south.set_yellow()
+            east_west.set_red()
 
+        # Draw traffic lights
+        north_south_light_color = (255, 0, 0) if north_south.get_red() else (255, 255, 0) if north_south.get_yellow() else (0, 255, 0)
+        east_west_light_color = (255, 0, 0) if east_west.get_red() else (255, 255, 0) if east_west.get_yellow() else (0, 255, 0)
+        pygame.draw.circle(screen, north_south_light_color, (300, 200), 20)  # North/South traffic light
+        pygame.draw.circle(screen, east_west_light_color, (250, 300), 20)  # East/West traffic light
+
+        # Update the display
+        pygame.display.flip()
+
+        # Control the frame rate
+        clock.tick(60)
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
