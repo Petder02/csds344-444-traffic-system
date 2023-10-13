@@ -256,10 +256,11 @@ def main(red_time: float, green_time: float, yellow_time: float):
     # Draw roads
     GRAY = (200, 200, 200)
     LIGHT_YELLOW = (255, 255, 204)
-    pygame.draw.rect(screen, GRAY, pygame.Rect(0, 250, 600, 100))         # Horizontal road
-    pygame.draw.rect(screen, LIGHT_YELLOW, pygame.Rect(0, 295, 600, 10))  # Horizontal road line
-    pygame.draw.rect(screen, GRAY, pygame.Rect(250, 0, 100, 600))         # Vertical road
-    pygame.draw.rect(screen, LIGHT_YELLOW, pygame.Rect(295, 0, 10, 600))  # Vertical road line
+    pygame.draw.rect(screen, GRAY, pygame.Rect(0, 250, 600, 100))           # Horizontal road
+    pygame.draw.rect(screen, LIGHT_YELLOW, pygame.Rect(0, 295, 600, 10))    # Horizontal road line
+    pygame.draw.rect(screen, GRAY, pygame.Rect(250, 0, 100, 600))           # Vertical road
+    pygame.draw.rect(screen, LIGHT_YELLOW, pygame.Rect(295, 0, 10, 250))    # Vertical road line (top)
+    pygame.draw.rect(screen, LIGHT_YELLOW, pygame.Rect(295, 350, 10, 250))  # Vertical road line (bottom)
 
     running = True
     while running:
