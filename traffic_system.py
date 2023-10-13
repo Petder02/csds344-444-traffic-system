@@ -114,7 +114,7 @@ def main():
         east_cross = PedestrianLight(True, False)             # Start with East cross stop
         west_cross = PedestrianLight(True, False)             # Start with West cross stop
 
-        traffic_system = TrafficSystem(north_light, south_light, east_light, west_light, north_cross, south_cross, east_cross, west_cross, 10.0, 10.0, 2.0)
+        traffic_system = TrafficSystem(north_light, south_light, east_light, west_light, north_cross, south_cross, east_cross, west_cross, 10.0, 10.0, 5.0)
 
         screen.fill((255, 255, 255))  # Clear the screen
 
@@ -144,13 +144,16 @@ def main():
             west_light.set_red()
             east_cross.set_stop()
             west_cross.set_stop()
-        else:
+        elif elapsed_time % (traffic_system.red_time + traffic_system.green_time + traffic_system.yellow_time) < traffic_system.red_time + traffic_system.green_time + traffic_system.yellow_time:
             north_light.set_yellow()
             south_light.set_yellow()
             east_light.set_red()
             west_light.set_red()
-            north_cross.set_stop()
-            south_cross.set_stop()
+        else:
+            west_light.set_yellow()
+            east_light.set_yellow()
+            north_light.set_red()
+            south_light.set_red()
 
         # Draw traffic lights
         north_light_color = (255, 0, 0) if north_light.get_red() else (255, 255, 0) if north_light.get_yellow() else (0, 255, 0)
