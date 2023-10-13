@@ -7,11 +7,10 @@ class TrafficLight:
     A class representing a traffic light
 
     """
-    def __init__(self, is_green: bool, is_yellow: bool, is_red: bool, delay: float):
+    def __init__(self, is_green: bool, is_yellow: bool, is_red: bool):
         self.is_green = is_green
         self.is_yellow = is_yellow
         self.is_red = is_red
-        self.delay = delay
 
     def set_green(self):
         self.is_green = True
@@ -36,9 +35,6 @@ class TrafficLight:
 
     def get_red(self):
         return self.is_red
-
-    def get_delay(self):
-        return self.delay
 
 
 class PedestrianLight:
@@ -97,10 +93,10 @@ def initialize_traffic_system(red_time: float, green_time: float, yellow_time: f
     :param yellow_time: The time (secs) that the yellow light is on
     """
     # Initialize the traffic lights
-    north_light = TrafficLight(False, False, True, 0)  # Start with North red
-    south_light = TrafficLight(False, False, True, 0)  # Start with South red
-    east_light = TrafficLight(True, False, False, 0)  # Start with East green
-    west_light = TrafficLight(True, False, False, 0)  # Start with West green
+    north_light = TrafficLight(False, False, True)  # Start with North red
+    south_light = TrafficLight(False, False, True)  # Start with South red
+    east_light = TrafficLight(True, False, False)  # Start with East green
+    west_light = TrafficLight(True, False, False)  # Start with West green
     north_cross = PedestrianLight(False, True)  # Start with North cross stop
     south_cross = PedestrianLight(False, True)  # Start with South cross stop
     east_cross = PedestrianLight(True, False)  # Start with East cross stop
