@@ -247,8 +247,6 @@ def find_time_till_next_light_change(cycle_time: float, screen: pygame.surface, 
     time_left_text_first_half = 'Time Remaining Until'
     time_left_text_second_half = 'Light Change: '
 
-    print(cycle_time)
-
     # Repetition is done due to the pattern of the lights
     if east_west_green:
         time_left_text_second_half += str(round(traffic_system.red_time - cycle_time, 2))
