@@ -231,6 +231,42 @@ def draw_pedestrian_signs(screen: pygame.Surface, traffic_system: TrafficSystem)
     screen.blit(font.render('south', True, (255, 255, 255)), (square_x + 5, square_y + 5))
     screen.blit(font.render(sign_text, True, sign_color), (square_x + 5, square_y + 40))
 
+def find_time_till_next_light_change(cycle_time: float, screen: pygame.surface, traffic_system: TrafficSystem):
+    """
+    Finds the time till the next light change and draws it onto the screen
+
+    :param cycle_time: The time (secs) since the start of the cycle
+    :param screen: The pygame screen
+    """
+    # Draw the current time remaining onto the screen in the top right corner
+    east_west_green = cycle_time < traffic_system.red_time
+    east_west_yellow = cycle_time < traffic_system.red_time + traffic_system.yellow_time
+    north_south_green = cycle_time < traffic_system.red_time + traffic_system.yellow_time + traffic_system.green_time
+    north_south_yellow = cycle_time < traffic_system.red_time + traffic_system.yellow_time + traffic_system.green_time + traffic_system.yellow_time
+    font = pygame.font.Font(None, 24)
+    time_left_text_first_half = 'Time Remaining Until'
+    time_left_text_second_half = 'Light Change: '
+
+    print(cycle_time)
+
+    # Repetition is done due to the pattern of the lights
+    if east_west_green:
+        time_left_text_second_half += str(round(traffic_system.red_time - cycle_time, 2))
+    elif east_west_yellow:
+        time_left_text_second_half += str(round(traffic_system.yellow_time + traffic_system.red_time - cycle_time, 2))
+    elif north_south_green:
+        time_left_text_second_half += (
+            str(round(traffic_system.green_time + traffic_system.yellow_time + traffic_system.red_time - cycle_time, 2)))
+    elif north_south_yellow:
+        time_left_text_second_half += (
+            str(round(traffic_system.yellow_time + traffic_system.green_time +
+                      traffic_system.yellow_time + traffic_system.red_time - cycle_time, 2)))
+
+    # Overwrite existing text
+    pygame.draw.rect(screen, (255, 255, 255), (400, 10, 200, 50))
+
+    screen.blit(font.render(time_left_text_first_half, True, (0, 0, 0)), (400, 10))
+    screen.blit(font.render(time_left_text_second_half, True, (0, 0, 0)), (400, 40))
 
 def main(red_time: float, green_time: float, yellow_time: float):
     """
@@ -279,6 +315,9 @@ def main(red_time: float, green_time: float, yellow_time: float):
 
         # Draw pedestrian crossing signs
         draw_pedestrian_signs(screen, traffic_system)
+
+        # Draw the amount of time till the next light change onto the screen
+        find_time_till_next_light_change(cycle_time, screen, traffic_system)
 
         pygame.display.flip()  # Update the display
         clock.tick(60)  # Control the frame rate
